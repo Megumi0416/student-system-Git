@@ -1,0 +1,105 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.StudentMapper">
+
+<!--    <select id="selectAll" resultType="com.example.entity.Student">-->
+<!--        SELECT * FROM `student`-->
+<!--        <where>-->
+<!--            <if test="name != null">AND name LIKE CONCAT('%', #{name}, '%')</if>-->
+<!--            <if test="username != null">AND username LIKE CONCAT('%', #{username}, '%')</if>-->
+<!--        </where>-->
+<!--    </select>-->
+    <select id="selectAll" resultMap="studentResultMap">
+        SELECT
+        s.*,
+        c.name as collegeName
+        FROM student s
+        LEFT JOIN college c ON s.college_id = c.id
+        <where>
+            <if test="name != null">AND s.name LIKE CONCAT('%', #{name}, '%')</if>
+            <if test="username != null">AND s.username LIKE CONCAT('%', #{username}, '%')</if>
+        </where>
+    </select>
+
+    <!-- 结果映射 -->
+    <resultMap id="studentResultMap" type="com.example.entity.Student">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="name" column="name"/>
+        <result property="avatar" column="avatar"/>
+        <result property="role" column="role"/>
+        <result property="phone" column="phone"/>
+        <result property="email" column="email"/>
+        <result property="sex" column="sex"/>
+        <result property="birth" column="birth"/>
+        <result property="grade" column="grade"/>
+        <result property="collegeId" column="college_id"/>
+        <result property="college" column="collegeName"/>
+    </resultMap>
+
+    <delete id="deleteById">
+        delete from `student`
+        where id = #{id}
+    </delete>
+
+    <!-- 插入学生记录 -->
+    <insert id="insert" parameterType="com.example.entity.Student" useGeneratedKeys="true" keyProperty="id">
+        insert into `student`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="username != null">username,</if>
+            <if test="password != null">password,</if>
+            <if test="name != null">name,</if>
+            <if test="phone != null">phone,</if>
+            <if test="email != null">email,</if>
+            <if test="avatar != null">avatar,</if>
+            <if test="role != null">role,</if>
+            <if test="sex != null">sex,</if>
+            <if test="birth != null">birth,</if>
+            <if test="grade != null">grade,</if>
+            <if test="collegeId != null">college_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="username != null">#{username},</if>
+            <if test="password != null">#{password},</if>
+            <if test="name != null">#{name},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="email != null">#{email},</if>
+            <if test="avatar != null">#{avatar},</if>
+            <if test="role != null">#{role},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="birth != null">#{birth},</if>
+            <if test="grade != null">#{grade},</if>
+            <if test="collegeId != null">#{collegeId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.Student">
+        update `student`
+        <set>
+            <if test="username != null">username = #{username},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="avatar != null">avatar = #{avatar},</if>
+            <if test="role != null">role = #{role},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="grade != null">grade = #{grade},</if>
+            <if test="collegeId != null">college_id = #{collegeId},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="count" resultType="int">
+        SELECT COUNT(DISTINCT sc.student_id)
+        FROM student_course sc
+        <if test="teacherId != null">
+            INNER JOIN course c ON sc.course_id = c.id AND c.teacher_id = #{teacherId}
+        </if>
+    </select>
+
+</mapper>

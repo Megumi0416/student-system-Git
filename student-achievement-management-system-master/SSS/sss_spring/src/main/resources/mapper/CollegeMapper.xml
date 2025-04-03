@@ -1,0 +1,41 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.CollegeMapper">
+
+    <select id="selectAll" resultType="com.example.entity.College">
+        SELECT * FROM college
+        <where>
+            <if test="name != null">AND name LIKE CONCAT('%', #{name}, '%')</if>
+            <if test="dean != null">AND dean LIKE CONCAT('%', #{dean}, '%')</if>
+        </where>
+    </select>
+
+    <delete id="deleteById">
+        DELETE FROM college WHERE id = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="com.example.entity.College" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO college
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null">name,</if>
+            <if test="dean != null">dean,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null">#{name},</if>
+            <if test="dean != null">#{dean},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.College">
+        UPDATE college
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="dean != null">dean = #{dean},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+</mapper>

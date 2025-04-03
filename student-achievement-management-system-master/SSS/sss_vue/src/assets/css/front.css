@@ -1,0 +1,63 @@
+.front-notice {
+    background: #e7fcff;
+    padding: 12px 35px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    .el-icon { margin-right: 8px; color: #409EFF; }
+}
+
+.front-header {
+    display: flex;
+
+    height: 60px;
+    line-height: 60px;
+    border-bottom: 1px solid #eee;
+}
+
+.front-header-left {
+    width: 350px;
+    display: flex;
+    align-items: center;
+    padding-left: 30px;
+}
+
+.front-header-left img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.front-header-left .title {
+    color: #333;
+    cursor: pointer;
+    margin-left: 10px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.front-header-center {
+    flex: 1;
+}
+
+.front-header-right {
+    padding-right: 20px;
+}
+
+.front-header-right .el-dropdown {
+    height: 60px;
+}
+
+.main-content {
+    width: 80%;
+    margin: 5px auto;
+}
+
+/*Element-Plus 样式覆盖*/
+.el-menu--horizontal {
+    border: none !important;
+    height: 59px;
+}
+.el-tooltip__trigger {
+    outline: none;
+}

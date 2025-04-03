@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.StudentCourseMapper">
+
+    <select id="selectAll" resultType="com.example.entity.StudentCourse">
+        select
+        sc.*,
+        s.name as studentName,
+        c.name as courseName,
+        c.code as code,
+        t.name as teacherName
+        from student_course sc
+        left join student s on sc.student_id = s.id
+        left join course c on sc.course_id = c.id
+        left join teacher t on c.teacher_id = t.id
+        <where>
+            <if test="courseName != null">and c.name like concat('%', #{courseName}, '%')</if>
+            <if test="code != null">and c.code like concat('%', #{code}, '%')</if>
+            <if test="studentId != null">and sc.student_id = #{studentId}</if>
+            <if test="studentName != null">and s.name like concat('%', #{studentName}, '%')</if>
+            <if test="term != null">and sc.term like concat('%', #{term}, '%')</if>
+            <if test="teacherId != null">AND c.teacher_id = #{teacherId}</if>
+        </where>
+        order by sc.id desc
+    </select>
+
+    <update id="updateById" parameterType="com.example.entity.CourseStatistics">
+        update student_course
+        <set>
+            <if test="term != null and term != ''">term = #{term},</if>
+            <if test="score != null">score = #{score},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="selectScoreStatistics" resultType="map">
+        SELECT
+        c.name AS courseName,
+        AVG(sc.score) AS avgScore,
+        MAX(sc.score) AS maxScore,
+        MIN(sc.score) AS minScore
+        FROM
+        student_course sc
+        LEFT JOIN
+        course c ON sc.course_id = c.id
+        <where>
+            <if test="studentId != null">AND sc.student_id = #{studentId}</if>
+        </where>
+        GROUP BY c.name
+    </select>
+
+<!--    <select id="selectCourseStatistics" resultType="com.example.entity.StudentCourse">-->
+<!--        SELECT-->
+<!--        c.name as courseName,-->
+<!--        c.code as code,-->
+<!--        AVG(sc.score) as avgScore,-->
+<!--        MAX(sc.score) as maxScore,-->
+<!--        MIN(sc.score) as minScore-->
+<!--        FROM student_course sc-->
+<!--        LEFT JOIN course c ON sc.course_id = c.id-->
+<!--        LEFT JOIN teacher t ON c.teacher_id = t.id-->
+<!--        WHERE sc.term = #{term}-->
+<!--        <if test="teacherName != null">-->
+<!--            AND t.teacher_number = #{teacherName}-->
+<!--        </if>-->
+<!--        GROUP BY sc.course_id-->
+<!--    </select>-->
+
+<!--    <select id="selectCourseStatistics" resultType="com.example.entity.CourseStatistics">-->
+<!--        SELECT-->
+<!--        c.name as courseName,-->
+<!--        c.code as code,-->
+<!--        AVG(sc.score) as avgScore,-->
+<!--        MAX(sc.score) as maxScore,-->
+<!--        MIN(sc.score) as minScore-->
+<!--        FROM student_course sc-->
+<!--        LEFT JOIN course c ON sc.course_id = c.id-->
+<!--        LEFT JOIN teacher t ON c.teacher_id = t.id-->
+<!--        WHERE sc.term = #{term}-->
+<!--        AND t.username = #{teacherUsername} &lt;!&ndash; 根据教师工号过滤 &ndash;&gt;-->
+<!--        GROUP BY sc.course_id-->
+<!--    </select>-->
+
+</mapper>

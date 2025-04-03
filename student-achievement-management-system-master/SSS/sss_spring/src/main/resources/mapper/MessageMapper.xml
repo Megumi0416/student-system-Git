@@ -1,0 +1,109 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.MessageMapper">
+
+    <!-- 查询所有消息，支持按内容模糊查询 -->
+    <select id="selectAll" resultType="com.example.entity.Message">
+        SELECT * FROM `message`
+        <where>
+            <!-- 发送方匹配 -->
+            <if test="senderUsername != null and senderUsername != ''">
+                AND sender_username = #{senderUsername}
+            </if>
+            <if test="senderName != null and senderName != ''">
+                AND sender_name LIKE CONCAT('%', #{senderName}, '%')
+            </if>
+
+            <!-- 接收方匹配 -->
+            <if test="receiverUsername != null and receiverUsername != ''">
+                AND receiver_username = #{receiverUsername}
+            </if>
+            <if test="receiverName != null and receiverName != ''">
+                AND receiver_name LIKE CONCAT('%', #{receiverName}, '%')
+            </if>
+
+            <!-- 内容检索 -->
+            <if test="content != null and content != ''">
+                AND content LIKE CONCAT('%', #{content}, '%')
+            </if>
+
+            <!-- 用户视角过滤（当需要限制用户只能查看自己相关消息时） -->
+            <if test="currentUser != null">
+                AND (
+                sender_username = #{currentUser.username}
+                OR receiver_username = #{currentUser.username}
+                )
+            </if>
+        </where>
+        ORDER BY timestamp DESC
+    </select>
+
+    <!-- 根据ID删除消息 -->
+    <delete id="deleteById">
+        DELETE FROM `message`
+        WHERE id = #{id}
+    </delete>
+
+    <!-- 插入消息 -->
+    <insert id="insert" parameterType="com.example.entity.Message" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO `message`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="senderUsername != null">sender_username,</if>
+            <if test="senderName != null">sender_name,</if>
+            <if test="senderRole != null">sender_role,</if>
+            <if test="receiverUsername != null">receiver_username,</if>
+            <if test="receiverName != null">receiver_name,</if>
+            <if test="receiverRole != null">receiver_role,</if>
+            <if test="content != null">content,</if>
+            <if test="timestamp != null">timestamp,</if>
+            <if test="isRead != null">is_read,</if>
+            <if test="parentId != null">parent_id,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="senderUsername != null">#{senderUsername},</if>
+            <if test="senderName != null">#{senderName},</if>
+            <if test="senderRole != null">#{senderRole},</if>
+            <if test="receiverUsername != null">#{receiverUsername},</if>
+            <if test="receiverName != null">#{receiverName},</if>
+            <if test="receiverRole != null">#{receiverRole},</if>
+            <if test="content != null">#{content},</if>
+            <if test="timestamp != null">#{timestamp},</if>
+            <if test="isRead != null">#{isRead},</if>
+            <if test="parentId != null">#{parentId},</if>
+        </trim>
+    </insert>
+
+    <!-- 根据ID更新消息 -->
+    <update id="updateById" parameterType="com.example.entity.Message">
+        UPDATE `message`
+        <set>
+            <if test="content != null">content = #{content},</if>
+            <if test="timestamp != null">timestamp = #{timestamp},</if>
+            <if test="isRead != null">is_read = #{isRead},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- MessageMapper.xml 中的 selectConversation 确保返回正确的字段 -->
+    <select id="selectConversation" resultType="com.example.entity.Message">
+        SELECT
+        sender_username as senderUsername,
+        sender_name as senderName,
+        sender_role as senderRole,
+        receiver_username as receiverUsername,
+        receiver_name as receiverName,
+        receiver_role as receiverRole,
+        is_read as isRead,
+        content,
+        timestamp,
+        parent_id as parentId
+
+        FROM message
+        WHERE (sender_username = #{from} AND receiver_username = #{to})
+        OR (sender_username = #{to} AND receiver_username = #{from})
+        ORDER BY timestamp ASC
+    </select>
+
+</mapper>

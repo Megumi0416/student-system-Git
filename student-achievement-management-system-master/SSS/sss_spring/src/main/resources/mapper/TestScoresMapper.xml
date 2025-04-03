@@ -1,0 +1,89 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.TestScoresMapper">
+
+    <!-- 查询成绩信息，包含学生姓名和课程名称 -->
+    <select id="selectAll" resultType="com.example.entity.TestScores">
+        SELECT
+        s.id,
+        s.score,
+        s.term,
+        st.name AS studentname,
+        st.username AS name,
+        c.name AS coursename,
+        c.credit AS credit,
+        c.code AS code
+        FROM
+        student_course s
+        LEFT JOIN
+        student st ON s.student_id = st.id
+        LEFT JOIN
+        course c ON s.course_id = c.id
+        WHERE 1=1
+        <if test="coursename != null and coursename.trim() != ''">
+            AND c.name LIKE CONCAT('%', #{coursename}, '%')
+        </if>
+        <if test="studentname != null and studentname.trim() != ''">
+            AND st.name LIKE CONCAT('%', #{studentname}, '%')
+        </if>
+        <if test="term != null and term.trim() != ''">
+            AND s.term = #{term}
+        </if>
+    </select>
+
+    <insert id="insert" parameterType="com.example.entity.TestScores" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO student_course (student_id, course_id, score, term)
+        VALUES (#{studentId}, #{courseId}, #{score}, #{term})
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.TestScores">
+        UPDATE student_course
+        SET
+            score = #{score},
+            term = #{term}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="int">
+        DELETE FROM student_course WHERE id = #{id}
+    </delete>
+
+    <select id="selectById" parameterType="int" resultType="com.example.entity.TestScores">
+        SELECT * FROM student_course WHERE id = #{id}
+    </select>
+
+    <select id="selectByStudentId" parameterType="int" resultType="com.example.entity.TestScores">
+        SELECT * FROM student_course WHERE student_id = #{studentId}
+    </select>
+
+    <select id="selectByCourseId" parameterType="int" resultType="com.example.entity.TestScores">
+        SELECT * FROM student_course WHERE course_id = #{courseId}
+    </select>
+
+    <!-- 最新学期成绩查询 -->
+    <select id="selectLatestTermScores" resultType="com.example.entity.TestScores">
+        SELECT sc.*,
+               c.name AS courseName,
+               c.code AS code,
+               c.credit AS credit,
+               t.name AS teacherName
+        FROM student_course sc
+                 LEFT JOIN course c ON sc.course_id = c.id
+                 LEFT JOIN teacher t ON c.teacher_id = t.id
+        WHERE sc.student_id = #{studentId}
+          AND sc.term = (
+            SELECT term
+            FROM student_course
+            WHERE student_id = #{studentId}
+            ORDER BY
+                CAST(SUBSTRING_INDEX(term, '年', 1) AS UNSIGNED) DESC,
+                CASE
+                    WHEN term LIKE '%春季%' THEN 1
+                    WHEN term LIKE '%秋季%' THEN 2
+                    END DESC
+            LIMIT 1
+            )
+    </select>
+
+</mapper>
