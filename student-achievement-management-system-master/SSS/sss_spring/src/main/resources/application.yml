@@ -8,15 +8,13 @@ spring:
     password: 123456
   jpa:
     show-sql: true
-#  jackson:
-#    date-format: yyyy-MM-dd HH:mm:ss
-#    time-zone: GMT+8
+  #  jackson:
+  #    date-format: yyyy-MM-dd HH:mm:ss
+  #    time-zone: GMT+8
   servlet:
     multipart:
       max-file-size: 20MB
       max-request-size: 20MB
-
-
 
 #mybatis-plus:
 #  configuration:
@@ -33,9 +31,10 @@ mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: false
-  mapper-locations: classpath:mapper/*.xml  # 指定 MyBatis 的 Mapper 文件位置
-  type-aliases-package: com.example.entity # 实体类所在包
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.example.SSS.entity,com.example.entity
+  configuration-properties:
+    mapperLocations: classpath*:com/example/SSS/mapper/*.xml
+    mapper-default-scope: public
 
 fileBaseUrl: http://localhost:${server.port}
-
-

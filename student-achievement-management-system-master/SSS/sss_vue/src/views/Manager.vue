@@ -36,7 +36,7 @@
 <!--                        router-->
 <!--               >-->
               <el-menu :default-active="activeMenuIndex"
-                       :default-openeds="['1', '2', '3', '4', '5']"
+                       :default-openeds="['1', '2', '3', '4', '5', '6']"
                        router
               >
           <el-menu-item index="/manager/home">
@@ -75,6 +75,13 @@
                   <el-menu-item index="/manager/testscores" v-if="data.user.role === 'ADMIN'">成绩信息</el-menu-item>
                   <el-menu-item index="/manager/studentcourse" v-if="data.user.role === 'TEACHER'">成绩录入</el-menu-item>
                   <el-menu-item index="/manager/statistics">成绩分析</el-menu-item>
+                </el-sub-menu>
+                <el-sub-menu index="6" v-if="data.user.role === 'ADMIN'">
+                  <template #title>
+                    <el-icon><Menu /></el-icon>
+                    <span>考试管理</span>
+                  </template>
+                  <el-menu-item index="/manager/arrangeexam">安排考试</el-menu-item>
                 </el-sub-menu>
                 <el-sub-menu index="5" v-if="data.user.role === 'ADMIN'">
                   <template #title>

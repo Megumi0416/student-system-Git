@@ -18,10 +18,8 @@
 <!--    </select>-->
     <select id="selectAll" resultMap="teacherResultMap">
         SELECT
-        t.*,
-        c.name as collegeName
+        t.*
         FROM teacher t
-        LEFT JOIN college c ON t.college_id = c.id
         <where>
             <if test="name != null">AND t.name LIKE CONCAT('%', #{name}, '%')</if>
             <if test="username != null">AND t.username LIKE CONCAT('%', #{username}, '%')</if>
@@ -38,8 +36,7 @@
         <result property="phone" column="phone"/>
         <result property="email" column="email"/>
         <result property="title" column="title"/>
-        <result property="collegeId" column="college_id"/>
-        <result property="college" column="collegeName"/>
+        <result property="college" column="college"/>
     </resultMap>
 
     <delete id="deleteById">
@@ -60,8 +57,7 @@
             <if test="avatar != null">avatar,</if>
             <if test="role != null">role,</if>
             <if test="title != null">title,</if>
-            <if test="collegeId != null">college_id,</if>
-            <if test="college != null">college</if>
+            <if test="college != null">college,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -73,8 +69,7 @@
             <if test="avatar != null">#{avatar},</if>
             <if test="role != null">#{role},</if>
             <if test="title != null">#{title},</if>
-            <if test="collegeId != null">#{collegeId},</if>
-            <if test="college != null">#{college}</if>
+            <if test="college != null">#{college},</if>
         </trim>
     </insert>
 
@@ -89,8 +84,7 @@
             <if test="avatar != null">avatar = #{avatar},</if>
             <if test="role != null">role = #{role},</if>
             <if test="title != null">title = #{title},</if>
-            <if test="collegeId != null">college_id = #{collegeId},</if>
-
+            <if test="college != null">college = #{college},</if>
         </set>
         where id = #{id}
     </update>

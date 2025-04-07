@@ -76,7 +76,7 @@ public class StudentService {
 
     public PageInfo<Student> selectPage(Student student, Integer pageNum, Integer pageSize) {
         // 在调用查询方法之前，通过PageHelper设置分页参数
-        PageHelper.startPage(pageNum, pageSize);
+        PageHelper.startPage(pageNum, pageSize);  // 已在全局配置中设置auto-count: false
 
         List<Student> list = this.selectAll(student);
 

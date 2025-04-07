@@ -12,10 +12,8 @@
 <!--    </select>-->
     <select id="selectAll" resultMap="studentResultMap">
         SELECT
-        s.*,
-        c.name as collegeName
+        s.*
         FROM student s
-        LEFT JOIN college c ON s.college_id = c.id
         <where>
             <if test="name != null">AND s.name LIKE CONCAT('%', #{name}, '%')</if>
             <if test="username != null">AND s.username LIKE CONCAT('%', #{username}, '%')</if>
@@ -35,8 +33,7 @@
         <result property="sex" column="sex"/>
         <result property="birth" column="birth"/>
         <result property="grade" column="grade"/>
-        <result property="collegeId" column="college_id"/>
-        <result property="college" column="collegeName"/>
+        <result property="college" column="college"/>
     </resultMap>
 
     <delete id="deleteById">
@@ -59,7 +56,7 @@
             <if test="sex != null">sex,</if>
             <if test="birth != null">birth,</if>
             <if test="grade != null">grade,</if>
-            <if test="collegeId != null">college_id,</if>
+            <if test="college != null">college,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -73,7 +70,7 @@
             <if test="sex != null">#{sex},</if>
             <if test="birth != null">#{birth},</if>
             <if test="grade != null">#{grade},</if>
-            <if test="collegeId != null">#{collegeId},</if>
+            <if test="college != null">#{college},</if>
         </trim>
     </insert>
 
@@ -89,7 +86,7 @@
             <if test="role != null">role = #{role},</if>
             <if test="sex != null">sex = #{sex},</if>
             <if test="grade != null">grade = #{grade},</if>
-            <if test="collegeId != null">college_id = #{collegeId},</if>
+            <if test="college != null">college = #{college},</if>
         </set>
         where id = #{id}
     </update>

@@ -494,4 +494,72 @@ INSERT INTO `teacher` VALUES (1, 't1001', '123456', '张三', 'http://localhost:
 INSERT INTO `teacher` VALUES (2, 't1002', '123456', '李四', 'avatar2.jpg', 'TEACHER', '13800138002', 'lisi@example.com', '副教授', '数学学院');
 INSERT INTO `teacher` VALUES (16, 'ggg', '123456', '待定', NULL, 'TEACHER', NULL, NULL, NULL, NULL);
 
+-- ----------------------------
+-- Table structure for exam
+-- ----------------------------
+DROP TABLE IF EXISTS `exam`;
+CREATE TABLE `exam`  (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '考试名称',
+  `course_id` int NOT NULL COMMENT '考试科目ID',
+  `exam_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '考试类型(期中/期末/补考)',
+  `exam_format` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '考试形式(闭卷/开卷/机考)',
+  `start_time` datetime NOT NULL COMMENT '开始时间',
+  `end_time` datetime NOT NULL COMMENT '结束时间',
+  `location` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '考试地点',
+  `capacity` int NULL DEFAULT 60 COMMENT '考试容量',
+  `total_score` int NULL DEFAULT 100 COMMENT '考试总分',
+  `notes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '考试注意事项',
+  `creator_id` int NULL DEFAULT NULL COMMENT '创建者ID',
+  `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `fk_course_exam`(`course_id` ASC) USING BTREE,
+  CONSTRAINT `fk_course_exam` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '考试表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of exam
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for exam_student
+-- ----------------------------
+DROP TABLE IF EXISTS `exam_student`;
+CREATE TABLE `exam_student`  (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `exam_id` int NOT NULL COMMENT '考试ID',
+  `student_id` int NOT NULL COMMENT '学生ID',
+  `seat_no` int NULL DEFAULT NULL COMMENT '座位号',
+  `status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT 'NOT_STARTED' COMMENT '状态(NOT_STARTED/ABSENT/PRESENT/FINISHED)',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `fk_exam_student_exam`(`exam_id` ASC) USING BTREE,
+  INDEX `fk_exam_student_student`(`student_id` ASC) USING BTREE,
+  CONSTRAINT `fk_exam_student_exam` FOREIGN KEY (`exam_id`) REFERENCES `exam` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `fk_exam_student_student` FOREIGN KEY (`student_id`) REFERENCES `student` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '考试学生关联表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of exam_student
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for exam_invigilator
+-- ----------------------------
+DROP TABLE IF EXISTS `exam_invigilator`;
+CREATE TABLE `exam_invigilator`  (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `exam_id` int NOT NULL COMMENT '考试ID',
+  `teacher_id` int NOT NULL COMMENT '教师ID',
+  `is_main` tinyint(1) NULL DEFAULT 0 COMMENT '是否主监考',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `fk_exam_invigilator_exam`(`exam_id` ASC) USING BTREE,
+  INDEX `fk_exam_invigilator_teacher`(`teacher_id` ASC) USING BTREE,
+  CONSTRAINT `fk_exam_invigilator_exam` FOREIGN KEY (`exam_id`) REFERENCES `exam` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `fk_exam_invigilator_teacher` FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '考试监考教师关联表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of exam_invigilator
+-- ----------------------------
+
 SET FOREIGN_KEY_CHECKS = 1;
