@@ -1,0 +1,47 @@
+server:
+  port: 8081
+
+spring:
+  datasource:
+    url: "jdbc:mysql://localhost:3306/sss_mysql?characterEncoding=utf-8&serverTimezone=Asia/Shanghai"
+    username: root
+    password: 123456
+  jpa:
+    show-sql: true
+  #  jackson:
+  #    date-format: yyyy-MM-dd HH:mm:ss
+  #    time-zone: GMT+8
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+
+# PageHelper分页插件配置
+pagehelper:
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
+  auto-count: false # 禁用自动计数查询
+
+#mybatis-plus:
+#  configuration:
+#    #    map-underscore-to-camel-case: true
+#    #     关闭驼峰式（camel case）命名方式
+#    map-underscore-to-camel-case: false
+#    #  执行 SQL 语句、处理事务等过程中产生的日志信息将会直接打印到控制台。
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#    #    在应用程序的类路径下的mapper目录中查找所有的XML映射文件
+#  mapper-locations: classpath:mapper/*.xml
+#  type-aliases-package: com.example.entity # 实体类所在包路径
+
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: false
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.example.SSS.entity,com.example.entity
+  configuration-properties:
+    mapperLocations: classpath*:com/example/SSS/mapper/*.xml
+    mapper-default-scope: public
+
+fileBaseUrl: http://localhost:${server.port}
