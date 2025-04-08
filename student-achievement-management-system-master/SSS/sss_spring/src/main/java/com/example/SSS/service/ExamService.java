@@ -29,7 +29,11 @@ public class ExamService {
      * 获取所有考试
      */
     public List<Exam> getAllExams() {
-        return examMapper.selectAll();
+        List<Exam> res = examMapper.selectAll();
+        System.out.println("__________________________________");
+        System.out.println(res);
+        System.out.println("???????????????????????????????");
+        return res;
     }
     
     /**

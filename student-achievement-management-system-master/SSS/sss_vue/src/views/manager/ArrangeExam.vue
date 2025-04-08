@@ -283,8 +283,12 @@ export default {
       examLocation: "",
       examDuration: "",
       examType: "",
+      examFormat: "",
       examStatus: "",
       examDescription: "",
+      notes: "",
+      capacity: null,
+      totalScore: null,
       selectedStudents: []
     })
     
@@ -419,13 +423,13 @@ export default {
       examForm.examId = row.id
       examForm.examName = row.name
       examForm.courseId = row.courseId
-      examForm.examType = row.examType
-      examForm.examFormat = row.examFormat
+      examForm.examType = row.examType || ''
+      examForm.examFormat = row.examFormat || ''
       examForm.examTime = [row.startTime, row.endTime]
-      examForm.examLocation = row.location
-      examForm.capacity = row.capacity
-      examForm.totalScore = row.totalScore
-      examForm.notes = row.notes
+      examForm.examLocation = row.location || ''
+      examForm.capacity = row.capacity || null
+      examForm.totalScore = row.totalScore || null
+      examForm.notes = row.notes || ''
       
       // 获取考生和监考教师信息
       fetchExamStudents(row.id)
@@ -534,8 +538,12 @@ export default {
       examForm.examLocation = ""
       examForm.examDuration = ""
       examForm.examType = ""
+      examForm.examFormat = ""
       examForm.examStatus = ""
       examForm.examDescription = ""
+      examForm.notes = ""
+      examForm.capacity = null
+      examForm.totalScore = null
       examForm.selectedStudents = []
       selectedStudents.value = []
       
@@ -565,15 +573,21 @@ export default {
           examLocation: examForm.examLocation,
           examDuration: examForm.examDuration,
           examType: examForm.examType,
+          examFormat: examForm.examFormat,
           examStatus: examForm.examStatus,
           examDescription: examForm.examDescription,
+          notes: examForm.notes,
+          capacity: examForm.capacity,
+          totalScore: examForm.totalScore,
           selectedStudents: selectedStudents.value.map(student => student.id || student)
         }
-        
-        // 确保所有ID字段为整数
+
+        // 确保所有数值字段为数字类型
         if (submitData.examId) submitData.examId = parseInt(submitData.examId)
         if (submitData.courseId) submitData.courseId = parseInt(submitData.courseId)
         if (submitData.teacherId) submitData.teacherId = parseInt(submitData.teacherId)
+        if (submitData.capacity) submitData.capacity = parseInt(submitData.capacity)
+        if (submitData.totalScore) submitData.totalScore = parseInt(submitData.totalScore)
         if (submitData.selectedStudents) {
           submitData.selectedStudents = submitData.selectedStudents.map(id => parseInt(id))
         }

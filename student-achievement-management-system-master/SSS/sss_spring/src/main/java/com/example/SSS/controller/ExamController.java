@@ -234,6 +234,34 @@ public class ExamController {
             if (params.containsKey("examLocation")) {
                 exam.setLocation((String) params.get("examLocation"));
             }
+
+            if (params.containsKey("capacity")) {
+                Object capacity = params.get("capacity");
+                System.out.println("capacity类型: " + (capacity != null ? capacity.getClass() : "null"));
+                if (capacity != null) {
+                    try {
+                        exam.setCapacity(Integer.parseInt(capacity.toString()));
+                    } catch (NumberFormatException e) {
+                        System.err.println("capacity转换失败: " + e.getMessage());
+                    }
+                }
+            }
+
+            if (params.containsKey("totalScore")) {
+                Object totalScore = params.get("totalScore");
+                System.out.println("totalScore类型: " + (totalScore != null ? totalScore.getClass() : "null"));
+                if (totalScore != null) {
+                    try {
+                        exam.setTotalScore(Integer.parseInt(totalScore.toString()));
+                    } catch (NumberFormatException e) {
+                        System.err.println("totalScore转换失败: " + e.getMessage());
+                    }
+                }
+            }
+            
+            if (params.containsKey("notes")) {
+                exam.setNotes((String) params.get("notes"));
+            }
             
             if (params.containsKey("examDuration")) {
                 Object duration = params.get("examDuration");
