@@ -240,6 +240,7 @@ INSERT INTO `role_permission` VALUES (13, 2, 1);
 INSERT INTO `role_permission` VALUES (14, 2, 4);
 INSERT INTO `role_permission` VALUES (15, 2, 6);
 INSERT INTO `role_permission` VALUES (16, 2, 8);
+INSERT INTO `role_permission` VALUES (17, 2, 7);
 
 -- ----------------------------
 -- Table structure for score

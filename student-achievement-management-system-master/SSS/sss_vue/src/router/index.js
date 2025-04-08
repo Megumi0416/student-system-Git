@@ -61,6 +61,10 @@ const router = createRouter({
           meta: { name: '安排考试' } ,
           component: () => import('@/views/manager/ArrangeExam.vue')
         },
+        { path: 'teacherexams',
+          meta: { name: '查看考试' } ,
+          component: () => import('@/views/teacher/TeacherExams.vue')
+        },
         { path: 'person',
           meta: { name: '个人资料' } ,
           component: () => import('@/views/manager/Person.vue')

@@ -80,11 +80,13 @@ public Result getStatistics(@RequestParam(required = false) String term) {
     // 获取当前登录用户
     Account currentUser = AuthUtils.getCurrentUser();
 
+    // 移除教师用户的筛选限制
     String teacherName = null;
-    if (RoleEnum.TEACHER.name().equals(currentUser.getRole())) {
-        // 如果是教师，使用当前用户的用户名
-        teacherName = currentUser.getUsername();
-    }
+    // 不再根据教师角色设置用户名筛选
+    // if (RoleEnum.TEACHER.name().equals(currentUser.getRole())) {
+    //    // 如果是教师，使用当前用户的用户名
+    //    teacherName = currentUser.getUsername();
+    // }
 
     List<CourseStatistics> statistics = studentCourseService.getCourseStatistics(term, teacherName);
     return Result.success(statistics);

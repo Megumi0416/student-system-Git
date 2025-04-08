@@ -63,7 +63,7 @@ public class JWTInterceptor implements HandlerInterceptor {
         } catch (Exception e) {
             throw new CustomException(ResultCodeEnum.TOKEN_CHECK_ERROR);
         }
-        // 根据token里面携带的用户ID去对应的用户表查询 没有查到 所有报“用户不存在”错误
+        // 根据token里面携带的用户ID去对应的用户表查询 没有查到 所有报"用户不存在"错误
         if (ObjectUtil.isNull(account)) {
             // 用户不存在
             throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
@@ -96,7 +96,12 @@ public class JWTInterceptor implements HandlerInterceptor {
                     !requestURI.startsWith("/student/count") &&
                     !requestURI.startsWith("/api/all") &&
                     !requestURI.startsWith("/teacher/update") &&
-                    !requestURI.startsWith("/updatePassword")) {
+                    !requestURI.startsWith("/updatePassword") &&
+                    !requestURI.startsWith("/testscores") &&
+                    !requestURI.startsWith("/grade/analysis") &&
+                    !requestURI.startsWith("/exam")
+            ) {
+                System.out.println(requestURI+"::::url");
                 throw new CustomException(ResultCodeEnum.OPERATION_NOT_ALLOWED);
             }
             // 明确禁止访问接口

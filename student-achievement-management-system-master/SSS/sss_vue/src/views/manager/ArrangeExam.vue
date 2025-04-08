@@ -568,7 +568,7 @@ export default {
         const submitData = {
           examId: examForm.examId,
           courseId: examForm.courseId,
-          teacherId: examForm.teacherId,
+          teacherId: mainInvigilator.value,  // 使用主监考教师的ID
           examName: examForm.examName,
           examLocation: examForm.examLocation,
           examDuration: examForm.examDuration,

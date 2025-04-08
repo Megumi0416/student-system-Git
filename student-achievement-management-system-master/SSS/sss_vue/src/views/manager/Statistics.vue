@@ -49,16 +49,18 @@ for (let year = currentYear - 2; year <= currentYear + 1; year++) {
 const load = async () => {
   try {
     const params = {term: term.value}
-    if (user.role === 'TEACHER') {
-      params.teacherName = user.username
-    }
+    // 不再添加教师名称限制
+    // if (user.role === 'TEACHER') {
+    //   params.teacherName = user.username
+    // }
     const res = await request.get('/studentCourse/statistics', {params})
     if (res.code === '200') {
-      const filteredData = (res.data || []).filter(item => {
-        if (user.role !== 'TEACHER') return true
-        return item?.teacherName === user?.username
-      })
-      initChart(filteredData || [])
+      // 移除教师筛选条件，直接使用所有数据
+      // const filteredData = (res.data || []).filter(item => {
+      //   if (user.role !== 'TEACHER') return true
+      //   return item?.teacherName === user?.username
+      // })
+      initChart(res.data || [])
     }
   } catch (error) {
     console.error('数据加载失败:', error)

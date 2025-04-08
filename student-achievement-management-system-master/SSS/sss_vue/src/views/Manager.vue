@@ -67,14 +67,20 @@
             </template>
               <el-menu-item index="/manager/course">课程信息</el-menu-item>
           </el-sub-menu>
-                <el-sub-menu index="4">
+                <el-sub-menu index="4" v-if="data.user.role === 'ADMIN' || data.user.role === 'TEACHER'">
                   <template #title>
                     <el-icon><Menu /></el-icon>
                     <span>成绩管理</span>
                   </template>
-                  <el-menu-item index="/manager/testscores" v-if="data.user.role === 'ADMIN'">成绩信息</el-menu-item>
-                  <el-menu-item index="/manager/studentcourse" v-if="data.user.role === 'TEACHER'">成绩录入</el-menu-item>
+                  <el-menu-item index="/manager/testscores">成绩信息</el-menu-item>
                   <el-menu-item index="/manager/statistics">成绩分析</el-menu-item>
+                </el-sub-menu>
+                <el-sub-menu index="7" v-if="data.user.role === 'TEACHER'">
+                  <template #title>
+                    <el-icon><Menu /></el-icon>
+                    <span>考试管理</span>
+                  </template>
+                  <el-menu-item index="/manager/teacherexams">查看考试</el-menu-item>
                 </el-sub-menu>
                 <el-sub-menu index="6" v-if="data.user.role === 'ADMIN'">
                   <template #title>

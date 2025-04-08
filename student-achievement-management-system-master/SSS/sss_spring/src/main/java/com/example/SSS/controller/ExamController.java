@@ -90,19 +90,22 @@ public class ExamController {
         
         @SuppressWarnings("unchecked")
         List<Integer> studentIds = (List<Integer>) params.get("studentIds");
-        
+
+        System.out.println("param:::" + params);
+
         @SuppressWarnings("unchecked")
-        Map<String, Boolean> invigilatorsMap = (Map<String, Boolean>) params.get("invigilators");
+        Integer invigilatorId =(Integer) params.get("teacherId");
+        System.out.println("监考教师信息: " + invigilatorId); // 添加日志
         
         // 转换监考教师信息
-        Map<Integer, Boolean> invigilators = new HashMap<>();
-        if (invigilatorsMap != null) {
-            for (Map.Entry<String, Boolean> entry : invigilatorsMap.entrySet()) {
-                invigilators.put(Integer.parseInt(entry.getKey()), entry.getValue());
-            }
-        }
+//        Map<Integer, Boolean> invigilators = new HashMap<>();
+//        if (invigilatorsMap != null) {
+//            for (Map.Entry<String, Boolean> entry : invigilatorsMap.entrySet()) {
+//                invigilators.put(Integer.parseInt(entry.getKey()), entry.getValue());
+//            }
+//        }
         
-        return examService.updateExam(exam, studentIds, invigilators);
+        return examService.updateExam(exam, studentIds,invigilatorId);
     }
     
     /**
@@ -147,6 +150,22 @@ public class ExamController {
     @PostMapping("/{id}/random-seat")
     public boolean randomSeat(@PathVariable Integer id) {
         return examService.randomSeat(id);
+    }
+    
+    /**
+     * 获取教师的考试列表
+     */
+    @GetMapping("/teacher/{teacherId}")
+    public List<Exam> getTeacherExams(@PathVariable Integer teacherId) {
+        return examService.getTeacherExams(teacherId);
+    }
+    
+    /**
+     * 搜索教师的考试
+     */
+    @GetMapping("/teacher/{teacherId}/search")
+    public List<Exam> searchTeacherExams(@PathVariable Integer teacherId, @RequestParam String keyword) {
+        return examService.searchTeacherExams(teacherId, keyword);
     }
     
     /**

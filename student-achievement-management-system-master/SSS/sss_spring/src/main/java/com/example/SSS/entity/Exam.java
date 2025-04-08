@@ -38,4 +38,5 @@ public class Exam {
     private String creatorName; // 创建者姓名(非数据库字段)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime; // 创建时间
+    private Boolean isMain;  // 是否为主监考(非数据库字段)
 } 

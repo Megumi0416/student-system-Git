@@ -76,7 +76,7 @@ public class ExamService {
                 ExamInvigilator invigilator = new ExamInvigilator();
                 invigilator.setExamId(examId);
                 invigilator.setTeacherId(entry.getKey());
-                invigilator.setIsMain(entry.getValue());
+//                invigilator.setIsMain(entry.getValue());
                 examInvigilatorMapper.insert(invigilator);
             }
         }
@@ -88,7 +88,7 @@ public class ExamService {
      * 更新考试
      */
     @Transactional
-    public Exam updateExam(Exam exam, List<Integer> studentIds, Map<Integer, Boolean> invigilators) {
+    public Exam updateExam(Exam exam, List<Integer> studentIds, Integer invigilators) {
         // 更新考试信息
         examMapper.update(exam);
         Integer examId = exam.getId();
@@ -109,14 +109,19 @@ public class ExamService {
         }
         
         // 添加监考教师
-        if (invigilators != null && !invigilators.isEmpty()) {
-            for (Map.Entry<Integer, Boolean> entry : invigilators.entrySet()) {
-                ExamInvigilator invigilator = new ExamInvigilator();
-                invigilator.setExamId(examId);
-                invigilator.setTeacherId(entry.getKey());
-                invigilator.setIsMain(entry.getValue());
-                examInvigilatorMapper.insert(invigilator);
-            }
+        if (invigilators != null ) {
+//            for (Map.Entry<Integer, Boolean> entry : invigilators.entrySet()) {
+//                ExamInvigilator invigilator = new ExamInvigilator();
+//                invigilator.setExamId(examId);
+//                invigilator.setTeacherId(entry.getKey());
+//
+//                examInvigilatorMapper.insert(invigilator);
+//            }
+            ExamInvigilator invigilator = new ExamInvigilator();
+            invigilator.setExamId(examId);
+            invigilator.setTeacherId(invigilators);
+            invigilator.setIsMain(true);
+            examInvigilatorMapper.insert(invigilator);
         }
         
         return exam;
@@ -184,5 +189,19 @@ public class ExamService {
         }
         
         return true;
+    }
+    
+    /**
+     * 获取教师的考试列表
+     */
+    public List<Exam> getTeacherExams(Integer teacherId) {
+        return examMapper.selectByTeacherId(teacherId);
+    }
+    
+    /**
+     * 搜索教师的考试
+     */
+    public List<Exam> searchTeacherExams(Integer teacherId, String keyword) {
+        return examMapper.searchByTeacherId(teacherId, keyword);
     }
 } 
