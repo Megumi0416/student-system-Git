@@ -117,7 +117,9 @@ public class JWTInterceptor implements HandlerInterceptor {
                     !requestURI.startsWith("/api/all") &&
                     !requestURI.startsWith("/testscores/latestScores") &&
                     !requestURI.startsWith("/student/update") &&
-                    !requestURI.startsWith("/course/selectPage")) {
+                    !requestURI.startsWith("/course/selectPage") &&
+                    !requestURI.startsWith("/exam")
+            ) {
                 throw new CustomException(ResultCodeEnum.OPERATION_NOT_ALLOWED);
             }
         }

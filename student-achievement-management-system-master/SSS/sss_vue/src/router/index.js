@@ -80,6 +80,7 @@ const router = createRouter({
       component: () => import('@/views/Front.vue'),
       meta: { requiresAuth: true, allowedRoles: ['STUDENT'] },
       children: [
+        { path: 'examnotice', component: () => import('@/views/front/ExamNotice.vue') },
         { path: 'home', component: () => import('@/views/front/Home.vue') },
         { path: 'person', component: () => import('@/views/front/Person.vue') },
         { path: 'courselist', component: () => import('@/views/front/CourseList.vue') },

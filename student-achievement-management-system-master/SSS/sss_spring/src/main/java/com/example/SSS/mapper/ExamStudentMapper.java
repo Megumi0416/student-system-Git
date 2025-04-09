@@ -18,6 +18,14 @@ public interface ExamStudentMapper {
             "LEFT JOIN student s ON es.student_id = s.id WHERE es.id = #{id}")
     ExamStudent selectById(Integer id);
     
+    /**
+     * 根据考试ID和学生ID查询考试学生信息
+     */
+    @Select("SELECT es.*, s.name as studentName, s.username as studentUsername FROM exam_student es " +
+            "LEFT JOIN student s ON es.student_id = s.id " +
+            "WHERE es.exam_id = #{examId} AND es.student_id = #{studentId}")
+    ExamStudent selectByExamAndStudentId(@Param("examId") Integer examId, @Param("studentId") Integer studentId);
+    
     @Insert("INSERT INTO exam_student(exam_id, student_id, seat_no, status) " +
             "VALUES(#{examId}, #{studentId}, #{seatNo}, #{status})")
     @Options(useGeneratedKeys = true, keyProperty = "id")

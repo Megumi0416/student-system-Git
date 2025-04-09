@@ -13,6 +13,7 @@
           <el-menu-item index="/front/courselist">选课中心</el-menu-item>
           <el-menu-item index="/front/studentcourse">已选课程</el-menu-item>
           <el-menu-item index="/front/scores">我的成绩</el-menu-item>
+          <el-menu-item index="/front/examnotice">考试通知</el-menu-item>
           <el-menu-item index="/front/message">消息回复</el-menu-item>
           <el-menu-item index="/front/person">个人中心</el-menu-item>
         </el-menu>

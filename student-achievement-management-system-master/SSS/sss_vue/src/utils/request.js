@@ -40,14 +40,22 @@ request.interceptors.response.use(
         return res;
     },
     error => {
-        if (error.response.status === 404) {
-            ElMessage.error('未找到请求接口');
-        } else if (error.response.status === 500) {
-            ElMessage.error('系统异常，请查看后端控制台报错')
+        console.error('请求错误详情:', error);
+        if (error.response) {
+            if (error.response.status === 404) {
+                ElMessage.error('未找到请求接口');
+            } else if (error.response.status === 500) {
+                ElMessage.error('服务器错误：可能是数据库连接失败或表不存在，请检查后端日志');
+                console.error('服务器错误详情:', error.response.data);
+            } else {
+                ElMessage.error(`请求错误: ${error.response.status}, ${error.message}`);
+            }
+        } else if (error.request) {
+            ElMessage.error('服务器无响应，可能是服务未启动或网络问题');
         } else {
-            console.error(error.message)
+            ElMessage.error(`请求配置错误: ${error.message}`);
         }
-        return Promise.reject(error)
+        return Promise.reject(error);
     }
 )
 

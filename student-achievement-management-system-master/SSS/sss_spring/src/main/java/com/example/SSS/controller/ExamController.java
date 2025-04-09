@@ -13,6 +13,7 @@ import java.util.Map;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/exam")
@@ -43,6 +44,94 @@ public class ExamController {
     @GetMapping("/search")
     public List<Exam> searchExams(@RequestParam String keyword) {
         return examService.searchExams(keyword);
+    }
+    
+    /**
+     * 学生端查询考试列表（分页）
+     * 支持按考试名称、考试类型、状态和日期范围筛选
+     */
+    @GetMapping("/student")
+    public Map<String, Object> getStudentExams(
+            @RequestParam(required = false) Integer studentId,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String examType,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate,
+            @RequestParam(defaultValue = "1") Integer pageNum,
+            @RequestParam(defaultValue = "9") Integer pageSize) {
+        
+        Map<String, Object> result = new HashMap<>();
+        
+        try {
+            System.out.println("收到学生考试查询请求: studentId=" + studentId + ", name=" + name + ", examType=" + examType);
+            
+            // 参数验证
+            if (studentId == null || studentId <= 0) {
+                result.put("code", "500");
+                result.put("msg", "缺少有效的学生ID");
+                return result;
+            }
+            
+            // 从数据库获取学生的考试列表
+            Map<String, Object> pageResult = examService.getStudentExams(
+                studentId, name, examType, status, startDate, endDate, pageNum, pageSize);
+            
+            result.put("code", "200");
+            result.put("msg", "查询成功");
+            result.put("data", pageResult);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("查询学生考试列表发生错误: " + e.getMessage());
+            result.put("code", "500");
+            result.put("msg", "查询学生考试信息失败: " + e.getMessage());
+        }
+        
+        return result;
+    }
+    
+    /**
+     * 获取学生特定考试的详细信息（包含座位号）
+     */
+    @GetMapping("/student/{examId}/detail")
+    public Map<String, Object> getStudentExamDetail(
+            @PathVariable Integer examId,
+            @RequestParam Integer studentId) {
+        
+        Map<String, Object> result = new HashMap<>();
+        
+        try {
+            System.out.println("收到学生考试详情查询请求: examId=" + examId + ", studentId=" + studentId);
+            
+            // 参数验证
+            if (studentId == null || studentId <= 0) {
+                result.put("code", "500");
+                result.put("msg", "缺少有效的学生ID");
+                return result;
+            }
+            
+            // 从数据库获取考试详情
+            Map<String, Object> examDetail = examService.getStudentExamDetail(examId, studentId);
+            
+            if (examDetail == null) {
+                result.put("code", "404");
+                result.put("msg", "未找到考试信息或该学生未被安排参加此考试");
+                return result;
+            }
+            
+            result.put("code", "200");
+            result.put("msg", "查询成功");
+            result.put("data", examDetail);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("查询学生考试详情发生错误: " + e.getMessage());
+            result.put("code", "500");
+            result.put("msg", "查询考试详情失败: " + e.getMessage());
+        }
+        
+        return result;
     }
     
     /**

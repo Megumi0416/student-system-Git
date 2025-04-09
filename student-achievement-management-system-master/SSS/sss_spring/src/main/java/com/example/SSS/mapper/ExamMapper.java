@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 @Repository
@@ -44,6 +45,62 @@ public interface ExamMapper {
             @Result(property = "teacherId",column = "teacher_id")
     })
     Exam selectById(Integer id);
+
+    /**
+     * 分页查询学生的考试列表
+     */
+    @Select("<script>" +
+            "SELECT e.id, e.name, e.course_id, c.name as courseName, e.exam_type, e.exam_format, " +
+            "e.start_time as startTime, e.end_time as endTime, e.location, e.total_score as totalScore, e.notes " +
+            "FROM exam e " +
+            "LEFT JOIN course c ON e.course_id = c.id " +
+            "LEFT JOIN exam_student es ON e.id = es.exam_id " +
+            "WHERE es.student_id = #{studentId} " +
+            "<if test='name != null and name != \"\"'>" +
+            "  AND e.name LIKE CONCAT('%', #{name}, '%') " +
+            "</if>" +
+            "<if test='examType != null and examType != \"\"'>" +
+            "  AND e.exam_type = #{examType} " +
+            "</if>" +
+            "<if test='status != null and status != \"\"'>" +
+            "  AND es.status = #{status} " +
+            "</if>" +
+            "<if test='startDate != null and startDate != \"\"'>" +
+            "  AND e.start_time &gt;= #{startDate} " +
+            "</if>" +
+            "<if test='endDate != null and endDate != \"\"'>" +
+            "  AND e.start_time &lt;= #{endDate} " +
+            "</if>" +
+            "ORDER BY e.start_time ASC " +
+            "LIMIT #{offset}, #{limit}" +
+            "</script>")
+    List<Map<String, Object>> selectStudentExamsByPage(Map<String, Object> params);
+
+    /**
+     * 统计学生的考试数量
+     */
+    @Select("<script>" +
+            "SELECT COUNT(*) " +
+            "FROM exam e " +
+            "LEFT JOIN exam_student es ON e.id = es.exam_id " +
+            "WHERE es.student_id = #{studentId} " +
+            "<if test='name != null and name != \"\"'>" +
+            "  AND e.name LIKE CONCAT('%', #{name}, '%') " +
+            "</if>" +
+            "<if test='examType != null and examType != \"\"'>" +
+            "  AND e.exam_type = #{examType} " +
+            "</if>" +
+            "<if test='status != null and status != \"\"'>" +
+            "  AND es.status = #{status} " +
+            "</if>" +
+            "<if test='startDate != null and startDate != \"\"'>" +
+            "  AND e.start_time &gt;= #{startDate} " +
+            "</if>" +
+            "<if test='endDate != null and endDate != \"\"'>" +
+            "  AND e.start_time &lt;= #{endDate} " +
+            "</if>" +
+            "</script>")
+    int countStudentExams(Map<String, Object> params);
 
     @Insert("INSERT INTO exam(name, course_id, exam_type, exam_format, start_time, end_time, location, " +
             "capacity, total_score, notes) " +
