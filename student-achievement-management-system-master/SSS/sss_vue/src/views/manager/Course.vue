@@ -201,6 +201,23 @@ const handleEdit = (row) => {
 
 const add = () => {
   data.form.credit = Number(data.form.credit);
+  
+  // 添加课程时，从选择的学院和教师中获取相关信息
+  if (data.form.collegeId) {
+    const selectedCollege = collegeOptions.value.find(c => c.id === data.form.collegeId);
+    if (selectedCollege) {
+      data.form.college = selectedCollege.name;
+    }
+  }
+  
+  if (data.form.teacherId) {
+    const selectedTeacher = data.teachers.find(t => t.id === data.form.teacherId);
+    if (selectedTeacher) {
+      data.form.teacherName = selectedTeacher.name;
+      data.form.teachcollege = selectedTeacher.college;
+    }
+  }
+  
   request.post('/course/add', data.form).then(res => {
     if (res.code === '200') {
       ElMessage.success('操作成功');
@@ -214,6 +231,23 @@ const add = () => {
 
 const update = () => {
   data.form.credit = Number(data.form.credit);
+  
+  // 更新课程时，确保college和teachcollege字段正确设置
+  if (data.form.collegeId) {
+    const selectedCollege = collegeOptions.value.find(c => c.id === data.form.collegeId);
+    if (selectedCollege) {
+      data.form.college = selectedCollege.name;
+    }
+  }
+  
+  if (data.form.teacherId) {
+    const selectedTeacher = data.teachers.find(t => t.id === data.form.teacherId);
+    if (selectedTeacher) {
+      data.form.teacherName = selectedTeacher.name;
+      data.form.teachcollege = selectedTeacher.college;
+    }
+  }
+  
   request.put('/course/update', data.form).then(res => {
     if (res.code === '200') {
       ElMessage.success('操作成功');

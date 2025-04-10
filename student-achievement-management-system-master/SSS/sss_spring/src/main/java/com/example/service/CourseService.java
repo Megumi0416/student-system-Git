@@ -52,8 +52,7 @@ public class CourseService {
 
         List<Course> list = this.selectAll(course);
 
-        // 使用PageInfo来封装分页结果，注意这里使用了PageInfo的静态方法of来创建实例
-        // 这种方式是PageHelper 5.x版本及以后推荐的，因为它更加类型安全
+
         return PageInfo.of(list);
     }
 
